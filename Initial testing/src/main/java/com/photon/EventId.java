@@ -42,8 +42,8 @@ public class EventId {
 
     public static EventId generate() {
         long hlc     = HLC.now();
-        long tsUpper = (hlc >>> 36) & 0xFFFFFFFL; // upper 28 bits
-        long packed  = (tsUpper << 36) | (PROCESS_ID << 20) | SERVER_IP;
+        long hlcLow = hlc & 0xFFFFFFFFFL;   // 36 bits
+        long packed = (SERVER_IP << 48) | (PROCESS_ID << 36) | hlcLow;
         return new EventId(packed, hlc);
     }
 
