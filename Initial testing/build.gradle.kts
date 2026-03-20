@@ -37,11 +37,16 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:1.5.6")
     compileOnly("javax.annotation:javax.annotation-api:1.3.2")
 
+    implementation("org.apache.hadoop:hadoop-client:3.4.0")
+    implementation("org.apache.hbase:hbase-client:2.5.9")
+
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
     testImplementation("org.testcontainers:testcontainers:1.19.8")
     testImplementation("org.testcontainers:junit-jupiter:1.19.8")
+
+
 }
 
 protobuf {
