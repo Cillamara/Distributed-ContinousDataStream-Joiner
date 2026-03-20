@@ -42,10 +42,6 @@ private static final long serialVersionUID = 0L;
   public static final int EVENT_ID_FIELD_NUMBER = 1;
   private long eventId_ = 0L;
   /**
-   * <pre>
-   * packed EventId.value
-   * </pre>
-   *
    * <code>fixed64 event_id = 1;</code>
    * @return The eventId.
    */
@@ -382,10 +378,6 @@ private static final long serialVersionUID = 0L;
 
     private long eventId_ ;
     /**
-     * <pre>
-     * packed EventId.value
-     * </pre>
-     *
      * <code>fixed64 event_id = 1;</code>
      * @return The eventId.
      */
@@ -394,10 +386,6 @@ private static final long serialVersionUID = 0L;
       return eventId_;
     }
     /**
-     * <pre>
-     * packed EventId.value
-     * </pre>
-     *
      * <code>fixed64 event_id = 1;</code>
      * @param value The eventId to set.
      * @return This builder for chaining.
@@ -410,10 +398,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * packed EventId.value
-     * </pre>
-     *
      * <code>fixed64 event_id = 1;</code>
      * @return This builder for chaining.
      */

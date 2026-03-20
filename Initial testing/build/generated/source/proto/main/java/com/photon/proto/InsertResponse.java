@@ -46,35 +46,18 @@ private static final long serialVersionUID = 0L;
   public enum Status
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <pre>
-     * registered — joiner may write to output log
-     * </pre>
-     *
      * <code>SUCCESS = 0;</code>
      */
     SUCCESS(0),
     /**
-     * <pre>
-     * duplicate — joiner must drop this event
-     * </pre>
-     *
      * <code>ALREADY_EXISTS = 1;</code>
      */
     ALREADY_EXISTS(1),
     /**
-     * <pre>
-     * same joiner token already in registry — joiner can
-     * </pre>
-     *
      * <code>RETRY = 2;</code>
      */
     RETRY(2),
     /**
-     * <pre>
-     * safely re-write output (it crashed after registering
-     * but before writing, §3.3.2)
-     * </pre>
-     *
      * <code>TOO_OLD = 3;</code>
      */
     TOO_OLD(3),
@@ -82,35 +65,18 @@ private static final long serialVersionUID = 0L;
     ;
 
     /**
-     * <pre>
-     * registered — joiner may write to output log
-     * </pre>
-     *
      * <code>SUCCESS = 0;</code>
      */
     public static final int SUCCESS_VALUE = 0;
     /**
-     * <pre>
-     * duplicate — joiner must drop this event
-     * </pre>
-     *
      * <code>ALREADY_EXISTS = 1;</code>
      */
     public static final int ALREADY_EXISTS_VALUE = 1;
     /**
-     * <pre>
-     * same joiner token already in registry — joiner can
-     * </pre>
-     *
      * <code>RETRY = 2;</code>
      */
     public static final int RETRY_VALUE = 2;
     /**
-     * <pre>
-     * safely re-write output (it crashed after registering
-     * but before writing, §3.3.2)
-     * </pre>
-     *
      * <code>TOO_OLD = 3;</code>
      */
     public static final int TOO_OLD_VALUE = 3;

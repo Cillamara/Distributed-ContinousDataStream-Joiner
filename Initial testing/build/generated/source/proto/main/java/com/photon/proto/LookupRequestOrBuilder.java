@@ -9,10 +9,6 @@ public interface LookupRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * packed EventId.value
-   * </pre>
-   *
    * <code>fixed64 event_id = 1;</code>
    * @return The eventId.
    */

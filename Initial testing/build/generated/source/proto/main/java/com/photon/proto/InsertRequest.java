@@ -43,10 +43,6 @@ private static final long serialVersionUID = 0L;
   public static final int EVENT_ID_FIELD_NUMBER = 1;
   private long eventId_ = 0L;
   /**
-   * <pre>
-   * packed EventId.value (shard key + dedup key)
-   * </pre>
-   *
    * <code>fixed64 event_id = 1;</code>
    * @return The eventId.
    */
@@ -60,7 +56,7 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object token_ = "";
   /**
    * <pre>
-   * "host:pid:hlc" — identifies the requesting joiner
+   * "host:pid:startMs" — crash-recovery token (§3.3.2)
    * </pre>
    *
    * <code>string token = 2;</code>
@@ -81,7 +77,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * "host:pid:hlc" — identifies the requesting joiner
+   * "host:pid:startMs" — crash-recovery token (§3.3.2)
    * </pre>
    *
    * <code>string token = 2;</code>
@@ -106,7 +102,7 @@ private static final long serialVersionUID = 0L;
   private long hlcTimestamp_ = 0L;
   /**
    * <pre>
-   * (used for crash-recovery retry detection, §3.3.2)
+   * full HLC for GC age check; 0 = skip
    * </pre>
    *
    * <code>int64 hlc_timestamp = 3;</code>
@@ -493,10 +489,6 @@ private static final long serialVersionUID = 0L;
 
     private long eventId_ ;
     /**
-     * <pre>
-     * packed EventId.value (shard key + dedup key)
-     * </pre>
-     *
      * <code>fixed64 event_id = 1;</code>
      * @return The eventId.
      */
@@ -505,10 +497,6 @@ private static final long serialVersionUID = 0L;
       return eventId_;
     }
     /**
-     * <pre>
-     * packed EventId.value (shard key + dedup key)
-     * </pre>
-     *
      * <code>fixed64 event_id = 1;</code>
      * @param value The eventId to set.
      * @return This builder for chaining.
@@ -521,10 +509,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * packed EventId.value (shard key + dedup key)
-     * </pre>
-     *
      * <code>fixed64 event_id = 1;</code>
      * @return This builder for chaining.
      */
@@ -538,7 +522,7 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object token_ = "";
     /**
      * <pre>
-     * "host:pid:hlc" — identifies the requesting joiner
+     * "host:pid:startMs" — crash-recovery token (§3.3.2)
      * </pre>
      *
      * <code>string token = 2;</code>
@@ -558,7 +542,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * "host:pid:hlc" — identifies the requesting joiner
+     * "host:pid:startMs" — crash-recovery token (§3.3.2)
      * </pre>
      *
      * <code>string token = 2;</code>
@@ -579,7 +563,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * "host:pid:hlc" — identifies the requesting joiner
+     * "host:pid:startMs" — crash-recovery token (§3.3.2)
      * </pre>
      *
      * <code>string token = 2;</code>
@@ -596,7 +580,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * "host:pid:hlc" — identifies the requesting joiner
+     * "host:pid:startMs" — crash-recovery token (§3.3.2)
      * </pre>
      *
      * <code>string token = 2;</code>
@@ -610,7 +594,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * "host:pid:hlc" — identifies the requesting joiner
+     * "host:pid:startMs" — crash-recovery token (§3.3.2)
      * </pre>
      *
      * <code>string token = 2;</code>
@@ -630,7 +614,7 @@ private static final long serialVersionUID = 0L;
     private long hlcTimestamp_ ;
     /**
      * <pre>
-     * (used for crash-recovery retry detection, §3.3.2)
+     * full HLC for GC age check; 0 = skip
      * </pre>
      *
      * <code>int64 hlc_timestamp = 3;</code>
@@ -642,7 +626,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * (used for crash-recovery retry detection, §3.3.2)
+     * full HLC for GC age check; 0 = skip
      * </pre>
      *
      * <code>int64 hlc_timestamp = 3;</code>
@@ -658,7 +642,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * (used for crash-recovery retry detection, §3.3.2)
+     * full HLC for GC age check; 0 = skip
      * </pre>
      *
      * <code>int64 hlc_timestamp = 3;</code>

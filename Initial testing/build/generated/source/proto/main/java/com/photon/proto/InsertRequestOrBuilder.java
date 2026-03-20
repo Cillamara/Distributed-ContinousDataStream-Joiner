@@ -9,10 +9,6 @@ public interface InsertRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * packed EventId.value (shard key + dedup key)
-   * </pre>
-   *
    * <code>fixed64 event_id = 1;</code>
    * @return The eventId.
    */
@@ -20,7 +16,7 @@ public interface InsertRequestOrBuilder extends
 
   /**
    * <pre>
-   * "host:pid:hlc" — identifies the requesting joiner
+   * "host:pid:startMs" — crash-recovery token (§3.3.2)
    * </pre>
    *
    * <code>string token = 2;</code>
@@ -29,7 +25,7 @@ public interface InsertRequestOrBuilder extends
   java.lang.String getToken();
   /**
    * <pre>
-   * "host:pid:hlc" — identifies the requesting joiner
+   * "host:pid:startMs" — crash-recovery token (§3.3.2)
    * </pre>
    *
    * <code>string token = 2;</code>
@@ -40,7 +36,7 @@ public interface InsertRequestOrBuilder extends
 
   /**
    * <pre>
-   * (used for crash-recovery retry detection, §3.3.2)
+   * full HLC for GC age check; 0 = skip
    * </pre>
    *
    * <code>int64 hlc_timestamp = 3;</code>

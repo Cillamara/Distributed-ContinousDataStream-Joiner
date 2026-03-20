@@ -35,6 +35,16 @@ public final class Photon {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_photon_InsertResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_photon_JoinRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_photon_JoinRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_photon_JoinResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_photon_JoinResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -51,11 +61,19 @@ public final class Photon {
       " \001(\003\"\202\001\n\016InsertResponse\022-\n\006status\030\001 \001(\0162" +
       "\035.photon.InsertResponse.Status\"A\n\006Status" +
       "\022\013\n\007SUCCESS\020\000\022\022\n\016ALREADY_EXISTS\020\001\022\t\n\005RET" +
-      "RY\020\002\022\013\n\007TOO_OLD\020\0032\205\001\n\021IdRegistryService\022" +
-      "7\n\006Lookup\022\025.photon.LookupRequest\032\026.photo" +
-      "n.LookupResponse\0227\n\006Insert\022\025.photon.Inse" +
-      "rtRequest\032\026.photon.InsertResponseB\024\n\020com" +
-      ".photon.protoP\001b\006proto3"
+      "RY\020\002\022\013\n\007TOO_OLD\020\003\"a\n\013JoinRequest\022\026\n\016clic" +
+      "k_event_id\030\001 \001(\006\022\021\n\tclick_hlc\030\002 \001(\003\022\020\n\010q" +
+      "uery_id\030\003 \001(\t\022\025\n\rclick_payload\030\004 \001(\014\"\231\001\n" +
+      "\014JoinResponse\022+\n\006status\030\001 \001(\0162\033.photon.J" +
+      "oinResponse.Status\"\\\n\006Status\022\n\n\006JOINED\020\000" +
+      "\022\023\n\017QUERY_NOT_FOUND\020\001\022\022\n\016ALREADY_JOINED\020" +
+      "\002\022\016\n\nUNJOINABLE\020\003\022\r\n\tTHROTTLED\020\0042\205\001\n\021IdR" +
+      "egistryService\0227\n\006Lookup\022\025.photon.Lookup" +
+      "Request\032\026.photon.LookupResponse\0227\n\006Inser" +
+      "t\022\025.photon.InsertRequest\032\026.photon.Insert" +
+      "Response2B\n\rJoinerService\0221\n\004Join\022\023.phot" +
+      "on.JoinRequest\032\024.photon.JoinResponseB\024\n\020" +
+      "com.photon.protoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -84,6 +102,18 @@ public final class Photon {
     internal_static_photon_InsertResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_photon_InsertResponse_descriptor,
+        new java.lang.String[] { "Status", });
+    internal_static_photon_JoinRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_photon_JoinRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_photon_JoinRequest_descriptor,
+        new java.lang.String[] { "ClickEventId", "ClickHlc", "QueryId", "ClickPayload", });
+    internal_static_photon_JoinResponse_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_photon_JoinResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_photon_JoinResponse_descriptor,
         new java.lang.String[] { "Status", });
   }
 
