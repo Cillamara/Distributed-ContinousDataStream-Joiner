@@ -1,0 +1,51 @@
+<mxfile host="65bd71144e">
+    <diagram name="System Overview" id="fig1">
+        <mxGraphModel dx="728" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="500" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Kafka&#xa;photon.clicks" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=14;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="226" y="315" width="110" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Dispatcher" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="215" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Joiner" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="207" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="IdRegistry&#xa;(etcd-backed)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="336" y="62" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="TieredEventStore&#xa;Redis (L1) + HBase (L2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="344" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Kafka&#xa;joined-events" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=14;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="578" y="311" width="110" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="(1) consume click" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;fontSize=10;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="(2) Lookup pre-check" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;fontSize=10;" parent="1" source="3" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="(3) gRPC Join(click)" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;strokeWidth=2;fontSize=10;" parent="1" source="3" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="(4) get(query)" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#000000;fontSize=10;" parent="1" source="4" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="(5) Insert (exactly-once)" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;strokeWidth=2;fontSize=10;" parent="1" source="4" target="5" edge="1">
+                    <mxGeometry x="-0.4118" y="-65" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="(6) produce join" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;fontSize=10;" parent="1" source="4" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Figure 1.&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;End-to-end click/query join pipeline. Solid arrows are the data path;&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;the dashed arrow&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63); font-size: 18px;&quot;&gt;is the&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63); font-size: 18px;&quot;&gt;&amp;nbsp;optional pre-check that lets the Dispatcher skip already-joined clicks before invoking the Joiner.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=left;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="434" width="850" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,64 @@
+<mxfile host="65bd71144e">
+    <diagram name="EventId / HLC Layout" id="fig5">
+        <mxGraphModel dx="728" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="440" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="evlbl" value="64-bit EventId  (EventId.java)" style="text;html=1;align=left;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="50" width="400" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="ev_ip" value="IP&#xa;20 bits" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="80" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="ev_pid" value="PID&#xa;16 bits" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="80" width="192" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="ev_hlc" value="HLC&#xa;28 bits" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="472" y="80" width="336" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="t63" value="63" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="142" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t44" value="44" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="142" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t28" value="28" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="462" y="142" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t0" value="0" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="142" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="explode" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="640" y="140" as="sourcePoint"/>
+                        <mxPoint x="440" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hlclbl" value="64-bit HLC stamp  (HybridLogicalClock.java) — only the low 28 bits are packed into EventId; full HLC accompanies the event in Kafka headers" style="text;html=1;align=left;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="220" width="800" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="hlc_wall" value="wall time (ms since epoch)&#xa;44 bits" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="250" width="528" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="hlc_log" value="logical counter&#xa;20 bits" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="568" y="250" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="ht63" value="63" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="312" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="ht20" value="20" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="558" y="312" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="ht0" value="0" style="text;html=1;align=center;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="312" width="20" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="notes" value="• Compose: id = (ip &lt;&lt; 44) | (pid &lt;&lt; 28) | (hlc &amp; 0x0FFFFFFF)&#xa;• Shard: shard(id) = id mod K   (uniform on the IP-prefixed high bits)&#xa;• HLC: thread-safe CAS on packed long; bumps logical counter on tie or skew&#xa;• Bounds NTP skew to ~50 ms; monotonic per process across restarts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="340" width="800" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cap" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Figure 5.&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Layout of the 64-bit EventId and the underlying Hybrid Logical Clock. Embedding the HLC in the i&lt;/font&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;d lets the&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;IdRegistry and Joiner reject expired events without an etcd round-trip, and gives the Dispatcher&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;a stable shard key derived from the originating host.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=left;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="425" width="800" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

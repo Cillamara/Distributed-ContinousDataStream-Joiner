@@ -1,0 +1,111 @@
+<mxfile host="65bd71144e">
+    <diagram name="etcd/Raft + Mechanical Diffs vs Photon" id="etcd-raft-diffs">
+        <mxGraphModel dx="728" dy="547" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Photon — etcd/Raft IdRegistry &amp; mechanical departures from the original paper" style="text;html=1;align=center;verticalAlign=middle;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="10" width="1200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="subtitle" value="Blue = our etcd/Raft path.   Orange callouts = where this implementation diverges mechanically from Photon (VLDB 2013)." style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="40" width="1200" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="etcd_group" value="etcd 3.5 cluster  —  Raft consensus" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="100" width="520" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="etcd_leader" value="etcd LEADER&#xa;:2379&#xa;&#xa;• AppendEntries&#xa;• holds latest term&#xa;• applies committed log&#xa;  to MVCC store" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="150" width="200" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="etcd_f1" value="follower 1&#xa;:2379&#xa;replays log" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="180" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="etcd_f2" value="follower 2&#xa;:2379&#xa;replays log" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="920" y="180" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="raft_e1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;" parent="1" source="etcd_leader" target="etcd_f1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="raft_e2" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;" parent="1" source="etcd_leader" target="etcd_f2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="raft_note" value="quorum write (majority of N replicas) acks before commit&#xa;linearizable reads via ReadIndex" style="text;html=1;align=center;fontSize=10;fontStyle=2;fontColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="295" width="480" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_paxos" value="DIFFERS FROM PHOTON&#xa;&#xa;Photon paper: PaxosDB&#xa;(custom Paxos KV, geo-sharded&#xa;by event-id, multi-region, with&#xa;background async repl across DCs)&#xa;&#xa;Here: single-region etcd cluster,&#xa;Raft consensus, no geo-sharding,&#xa;no cross-region replication." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1095" y="130" width="270" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_paxos_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#b46504;dashed=1;" parent="1" source="diff_paxos" target="etcd_group" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="idreg" value="IdRegistryServer  (gRPC :9091)&#xa;IDRegistryServer.java&#xa;&#xa;Lookup(event_id)  →  PRESENT | ABSENT&#xa;Insert(event_id, owner_token)  →  SUCCESS | ALREADY_EXISTS | RETRY | TOO_OLD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="400" width="520" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="idreg_etcd" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" source="idreg" target="etcd_group" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="idreg_etcd_l" value="jetcd KV.txn(...)" style="text;html=1;align=center;fontSize=11;fontStyle=2;fontColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="870" y="510" width="150" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="txn" value="etcd conditional transaction  (atomic CAS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="530" width="500" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="txn_body" value="IF  Cmp(key=&quot;reg/&lt;event_id&gt;&quot;, version=0)&#xa;THEN  Put(key, value=owner_token, lease=L)&#xa;ELSE  Get(key)   // existing owner, return ALREADY_EXISTS&#xa;&#xa;owner_token = host:pid:startMs   (crash-recovery)&#xa;lease L     = TTL N seconds (auto-GC of stale ids)&#xa;&#xa;Linearizable; one of N concurrent inserts wins&#xa;exactly-once is the etcd quorum decision, not app logic" style="text;html=1;align=left;fontSize=11;fontFamily=Courier New;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="560" width="480" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="txn_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;" parent="1" source="idreg" target="txn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_txn" value="DIFFERS FROM PHOTON&#xa;&#xa;Photon: registry uses PaxosDB&#xa;read-modify-write within one&#xa;Paxos round; deduplication&#xa;is &quot;commit only if absent&quot;.&#xa;&#xa;Here: same semantics expressed&#xa;as a single etcd Txn(IF version=0).&#xa;Idempotency token added (host:pid&#xa;:startMs) so a crashed Joiner&#xa;can recognize its own prior write&#xa;and not double-emit." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="115" width="180" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_txn_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#b46504;dashed=1;" parent="1" source="diff_txn" target="txn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lease" value="Lease-based GC&#xa;&#xa;• Each Insert attaches an etcd lease&#xa;• etcd auto-deletes the key when lease expires&#xa;• No background sweeper, no compaction job" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="550" width="300" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="lease_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;" parent="1" source="lease" target="etcd_group" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="910" y="540"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="diff_gc" value="DIFFERS FROM PHOTON&#xa;&#xa;Photon: separate &quot;Garbage Collector&quot;&#xa;process scans the registry and&#xa;deletes entries older than the&#xa;join window (~1 day).&#xa;&#xa;Here: etcd lease TTL replaces&#xa;the GC subsystem entirely —&#xa;set-and-forget at insert time." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="360" width="270" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_gc_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#b46504;dashed=1;" parent="1" source="diff_gc" target="lease" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hlc" value="TOO_OLD rejection (age check)&#xa;&#xa;Insert HLC vs server wall clock&#xa;If (now - hlc.wall) &gt; max_skew_window&#xa;  → reject TOO_OLD before touching etcd&#xa;&#xa;HLC layout (EventId.java):&#xa;[20 bits IP][16 bits PID][28 bits HLC]&#xa;HLC = [44 bit ms][20 bit logical]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="765" width="500" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="hlc_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#82b366;" parent="1" source="idreg" target="hlc" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="720" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="diff_hlc" value="DIFFERS FROM PHOTON&#xa;&#xa;Photon: opaque globally-unique&#xa;event_id assigned by the click&#xa;server; ordering not encoded.&#xa;Age-out done by registry sweeper.&#xa;&#xa;Here: event_id embeds an HLC&#xa;timestamp — server can reject&#xa;late events in O(1) without an&#xa;etcd round-trip. NTP-skew bounded&#xa;to ~50ms, monotonic per process." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=11;align=left;spacingLeft=8;" parent="1" vertex="1">
+                    <mxGeometry x="790" y="700" width="290" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_hlc_arrow" style="endArrow=classic;html=1;rounded=0;strokeColor=#b46504;dashed=1;" parent="1" source="diff_hlc" target="hlc" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="other_diffs_title" value="Other mechanical departures from Photon" style="text;html=1;align=left;fontSize=13;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="680" width="280" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_kafka" value="Transport: Kafka 3.7 (KRaft, single broker)&#xa;replaces Photon&#39;s internal log-shipper / RPC&#xa;between click-server and joiner." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=10;align=left;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="705" width="290" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_store" value="EventStore: Redis (L1, 300s TTL) + HBase&#xa;(L2, SNAPPY) replaces Photon&#39;s monolithic&#xa;&quot;PersistentStore&quot;. Backfill on miss." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=10;align=left;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="765" width="290" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="diff_retry" value="Retry: in-process DelayQueue with&#xa;exponential backoff (100ms→30s, max 10).&#xa;Photon used a separate Retrier service.&#xa;Single-region only — no failover joiner." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontSize=10;align=left;spacingLeft=6;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="825" width="290" height="55" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

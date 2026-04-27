@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net" modified="2026-04-27T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="Monitoring" id="fig6">
+    <mxGraphModel dx="900" dy="500" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="440" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Prometheus -->
+        <mxCell id="prom" value="Prometheus :9090&#10;scrape_interval = 5s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="160" width="180" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Targets -->
+        <mxCell id="d" value="dispatcher :9094&#10;&#10;clicks_consumed_total&#10;dispatch_status{status}&#10;retry_queue_depth" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="60" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="j" value="joiner :9093&#10;&#10;join_outcome_total{outcome}&#10;join_latency_seconds (histogram)&#10;join_in_flight (gauge)&#10;throttle_state" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="180" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="i" value="idregistry :9091&#10;&#10;insert_outcome_total{status}&#10;insert_latency_seconds&#10;too_old_rejections_total" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="300" width="280" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- arrows -->
+        <mxCell id="a1" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="prom" target="d">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="prom" target="j">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="prom" target="i">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al" value="HTTP GET /metrics" style="text;html=1;align=center;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="260" y="190" width="160" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- caption -->
+        <mxCell id="cap" value="Figure 6. Observability topology. Each service exposes a Prometheus simpleclient endpoint on its own port; Prometheus scrapes all three at 5-second intervals. The metric names listed are those used in the SLOs reported in §6 (throughput, deduplication accuracy, P99 join latency)." style="text;html=1;align=center;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="730" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

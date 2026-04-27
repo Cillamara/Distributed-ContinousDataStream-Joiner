@@ -1,0 +1,51 @@
+<mxfile host="65bd71144e">
+    <diagram name="Tiered EventStore" id="fig3">
+        <mxGraphModel dx="1628" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="540" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="caller" value="Joiner&#xa;get(query_id)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="200" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="tier" value="TieredEventStore (in-process facade)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="80" width="600" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="l1" value="CacheEventStore  (L1)&#xa;Redis 7 :6379&#xa;TTL 300s · key photon:q:{id}&#xa;target hit-rate &gt; 90%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="130" width="240" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="l2" value="LogsEventStore  (L2)&#xa;HBase 2.5&#xa;table photon_queries · cf e (SNAPPY)&#xa;durable, full retention" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="130" width="240" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="rd" value="Read path&#xa;1. probe L1&#xa;2. on miss → probe L2&#xa;3. on L2 hit → backfill L1 (set TTL)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="260" width="240" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="wr" value="Write path  (put query)&#xa;1. write L2 (durable)&#xa;2. write L1 (warm cache)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="260" width="240" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="a1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="caller" target="tier" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="l1" target="l2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2l" value="miss" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="525" y="155" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" parent="1" source="l2" target="l1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="680" y="115"/>
+                            <mxPoint x="400" y="115"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a3l" value="backfill on hit" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="473" y="110" width="120" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="cap" value="Figure 3. Tiered query store. Hot queries are served from Redis at memory latency; cold or evicted queries fall through to HBase and are promoted back into the cache. Writes are mirrored — L2 first for durability, then L1 to warm subsequent joins." style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="430" width="850" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

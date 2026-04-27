@@ -1,0 +1,64 @@
+<mxfile host="65bd71144e">
+    <diagram name="IdRegistry / etcd Raft" id="fig2">
+        <mxGraphModel dx="728" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="640" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="cli" value="Joiner&#xa;(gRPC client)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="240" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="srv" value="IdRegistryServer&#xa;:9091" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="259" y="156" width="170" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="txn" value="etcd conditional Txn&#xa;&#xa;IF  Cmp(key, Version=0)&#xa;THEN Put(key, owner_token, lease=L)&#xa;ELSE Get(key)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="527" y="149" width="280" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cluster" value="etcd 3.5 cluster — Raft" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="289" y="300" width="380" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="leader" value="Leader&#xa;:2379&#xa;&#xa;applies log to MVCC store" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="429" y="360" width="140" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="f1" value="Follower 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="309" y="460" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="f2" value="Follower 2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="569" y="460" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="raft1" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="leader" target="f1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="raft2" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="leader" target="f2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="raft_l" value="AppendEntries / quorum commit" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="329" y="520" width="320" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_cli" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="cli" target="srv" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_cli_l" value="gRPC&#xa;Lookup / Insert" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="195" width="100" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_srv_txn" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="srv" target="txn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_txn_etcd" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;strokeWidth=2;" parent="1" source="txn" target="leader" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_txn_etcd_l" value="jetcd KV.txn(...)" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="585" y="268" width="120" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="resp" value="Insert outcomes&#xa;&#xa;SUCCESS         — first writer wins (Put committed)&#xa;ALREADY_EXISTS  — key present; existing owner returned&#xa;TOO_OLD         — HLC age &gt; window (rejected pre-Txn)&#xa;RETRY           — etcd unavailable / lease lost" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="370" width="170" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_srv_resp" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" parent="1" source="srv" target="resp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cap" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Figure 2.&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;The IdRegistry. Each Insert is realised as a sin&lt;/span&gt;&lt;span style=&quot;font-size: 18px; background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;gle etcd transaction that succeeds only&lt;/span&gt;&lt;span style=&quot;font-size: 18px; background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;&amp;nbsp;when the&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(63, 63, 63); background-color: transparent; font-size: 18px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;event-id&amp;nbsp;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent; font-size: 18px;&quot;&gt;key is absent (Version=0). Linearizability comes from Raft quorum commit; idempotency comes&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63); font-size: 18px;&quot;&gt;from the owner-token (host:pid:startMs); garbage collection comes from the etcd lease attached to the Put.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=left;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="570" width="850" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,75 @@
+<mxfile host="65bd71144e">
+    <diagram name="Dispatcher Retry Pipeline" id="fig4">
+        <mxGraphModel dx="728" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="540" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="kin" value="Kafka&#xa;photon.clicks" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=14;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="210" y="80" width="110" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cons" value="Consumer pool&#xa;(N partitions)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="220" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="pre" value="Pre-check&#xa;IdRegistry.Lookup" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="200" width="150" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="jc" value="gRPC Join(click)&#xa;to Joiner :9093" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="570" y="120" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="dq" value="DelayQueue (in-process)&#xa;exp. backoff: 100ms → 30s&#xa;multiplier 2× · max attempts 10" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;align=left;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="570" y="320" width="240" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="drop" value="DROP&#xa;(already joined)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="80" width="150" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="done" value="commit Kafka offset" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="746" y="242" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="a1" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="kin" target="cons" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="cons" target="pre" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" parent="1" source="pre" target="drop" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3l" value="PRESENT" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="135" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="a4" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;strokeWidth=2;" parent="1" source="pre" target="jc" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a4l" value="ABSENT" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="170" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="a5" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="jc" target="done" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a5l" value="JOINED / ALREADY_JOINED" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="722" y="205" width="180" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;" parent="1" source="jc" target="dq" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6l" value="THROTTLED /&#xa;UNJOINABLE /&#xa;RPC error" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="225" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="a7" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;dashed=1;" parent="1" source="dq" target="pre" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="540" y="360"/>
+                            <mxPoint x="540" y="350"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a7l" value="re-enter after backoff" style="text;html=1;align=center;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="345" width="160" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="cap" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Figure 4.&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Dispatcher pipeline. The rhombus is a synchronous decision: a positive Lookup short-circuits the Kafka&amp;nbsp;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;offset commit and avoids spending an RPC on already-joined clicks.&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;Transient failures (throttle, network,&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;joiner not ready) re-enter the pipeline through an in-process DelayQueue with exponential backoff, capped&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63); font-size: 18px; background-color: transparent;&quot;&gt;at 10 attempts.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="430" width="850" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
